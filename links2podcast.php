@@ -47,10 +47,10 @@ class PodcastCreatorFromLinks {
 		$type=$this->type;
 		$page_str=file_get_contents($page);
 		$links=$this->findLinks($page_str,$type);
-		$feed_str="<?xml version=\"1.0\"  ?>
+		$feed_str="<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
 		<rss version=\"2.0\">
 		<channel>
-		<title>$this->item</title>
+		<title>$this->title</title>
 		<description>$this->desc</description>
 		<link>$page</link>
 		</channel>
@@ -58,12 +58,14 @@ class PodcastCreatorFromLinks {
 		$sxe = new SimpleXMLElement($feed_str);
 		foreach ($links as $link) {
 			if($this->ExcludeLink && strpos($link['name'],$this->ExcludeLink)===0) continue;
-			$item=$sxe->addChild('item');
+			$item=$sxe->channel->addChild('item');
 			$file = $link['url'];
 			if($this->delStr) $file=str_replace($this->delStr,'',$file);
 			if(strpos($file,'http://')!==0) $file=$page.'/'.$file;
 			$item->addChild('title',$link['name']);
+			$item->addChild('description',$link['name']);
 			$item->addChild('link',$file);
+			$item->addChild('guid',$file);
 			$enclosure=$item->addChild('enclosure');
 			$enclosure->addAttribute('url',$file);
 			$enclosure->addAttribute('type',$type);
@@ -71,7 +73,7 @@ class PodcastCreatorFromLinks {
 		if($this->image) {
 			$image=$sxe->channel->addChild('image');
 			$image->addChild('url',$this->image);
-			$image->addChild('title',$sxe->channel->title.' Logo');
+			$image->addChild('title',$sxe->channel->title);
 			$image->addChild('link',$sxe->channel->link);
 		}
 		$xml=$sxe->asXML();
@@ -121,3 +123,4 @@ class PodcastCreatorFromLinks {
 	return $innerHTML;
 	} 
 }
+

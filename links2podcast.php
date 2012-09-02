@@ -75,7 +75,7 @@ class PodcastCreatorFromLinks {
 			$image->addChild('link',$sxe->channel->link);
 		}
 		$xml=$sxe->asXML();
-		//$this->save_cache($xml);
+		$this->save_cache($xml);
 		return $xml;
 	}
     

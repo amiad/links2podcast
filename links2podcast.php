@@ -5,6 +5,7 @@ class PodcastCreatorFromLinks {
 	private $type='mp3';
 	private $image;
 	private $delStr;
+	private $delType;
 	public function __construct($page) {
 		$this->page=$page;
     	}
@@ -41,6 +42,9 @@ class PodcastCreatorFromLinks {
 	public function setExcludeLink($str){
 		$this->ExcludeLink=$str;
 	}
+	public function setDelType($bool){
+		$this->delType=$bool;
+	}
 
 	public function processFeed() {
 		$page=$this->page;
@@ -62,6 +66,7 @@ class PodcastCreatorFromLinks {
 			$file = $link['url'];
 			if($this->delStr) $file=str_replace($this->delStr,'',$file);
 			if(strpos($file,'http://')!==0) $file=$page.'/'.$file;
+			if($this->delType) $link['name']=str_replace('.'.$this->type,'',$link['name']);
 			$item->addChild('title',$link['name']);
 			$item->addChild('description',$link['name']);
 			$item->addChild('link',$file);
@@ -115,12 +120,11 @@ class PodcastCreatorFromLinks {
 		file_put_contents($cache_file,$xml);
 	}
 	private function get_inner_html( $node ) {
-	$innerHTML= '';
-	$children = $node->childNodes;
-	foreach ($children as $child) {
-		$innerHTML .= utf8_decode($child->ownerDocument->saveXML( $child ));
-	}
-	return $innerHTML;
+		$innerHTML= '';
+		$children = $node->childNodes;
+		foreach ($children as $child) {
+			$innerHTML .= utf8_decode($child->ownerDocument->saveXML( $child ));
+		}
+		return $innerHTML;
 	} 
 }
-

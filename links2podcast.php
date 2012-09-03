@@ -118,7 +118,7 @@ class PodcastCreatorFromLinks {
 	$innerHTML= '';
 	$children = $node->childNodes;
 	foreach ($children as $child) {
-		$innerHTML .= $child->ownerDocument->saveXML( $child );
+		$innerHTML .= utf8_decode($child->ownerDocument->saveXML( $child ));
 	}
 	return $innerHTML;
 	} 

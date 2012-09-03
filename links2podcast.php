@@ -102,7 +102,7 @@ class PodcastCreatorFromLinks {
 		return $links;
 	}
 	private function get_cache(){
-		$feed=$this->feed;
+		$feed=$this->page;
     		$update_seconds=$this->update_hours*3600;
     		$cache_file='cache/'.md5($feed);
 		if ((file_exists($cache_file)) && ((time()-filemtime($cache_file)<$update_seconds))){
@@ -115,7 +115,7 @@ class PodcastCreatorFromLinks {
 		else return false;
 	}
 	private function save_cache($xml){
-		$cache_file='cache/'.md5($this->feed);
+		$cache_file='cache/'.md5($this->page);
 		if(!file_exists('cache')) mkdir('cache');
 		file_put_contents($cache_file,$xml);
 	}
